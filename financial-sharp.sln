@@ -5,11 +5,11 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ADA194CA-79AC-4D7B-AB78-6DB0E6C69292}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Financial", "src\Financial\Financial.fsproj", "{95A71FBB-1975-4F72-8E71-93E90E518B8C}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FinancialSharp", "src\FinancialSharp\FinancialSharp.fsproj", "{95A71FBB-1975-4F72-8E71-93E90E518B8C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{88BD39EA-E9A5-4223-8F3E-15E8B7B3B3C1}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Financial.Tests", "tests\Financial\Financial.Tests.fsproj", "{924FDBA2-C890-4690-8D21-D0B8DD927386}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FinancialSharp.Tests", "tests\FinancialSharp\FinancialSharp.Tests.fsproj", "{924FDBA2-C890-4690-8D21-D0B8DD927386}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
