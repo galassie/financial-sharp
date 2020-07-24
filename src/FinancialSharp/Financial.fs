@@ -6,25 +6,25 @@ type PaymentDuePeriod =
 
 type Financial =
 
-    static member FV(rate : double, nper : double, pmt : double, pv : double, paymentDuePeriod : PaymentDuePeriod) =
-        let whenRateIsZero() =
-            -(pv + pmt * nper)
-        
-        let whenRateIsNotZero() =
-            let temp = (1.0 + rate) ** nper
-            let paymentDuePeriodMult = match paymentDuePeriod with | Begin -> 1.0 | End -> 0.0
-            (-pv * temp - pmt * (1.0 + rate * paymentDuePeriodMult) / rate * (temp - 1.0))
-        
-        match rate with
-        | 0.0 -> whenRateIsZero()
-        | _ -> whenRateIsNotZero()
+    static member private PaymentDuePeriodMult(paymentDuePeriod : PaymentDuePeriod) =
+        match paymentDuePeriod with 
+        | Begin -> 1.0
+        | End -> 0.0
 
-    static member FV(rate : double, nper : double, pmt : double, pv : double) =
-        Financial.FV(rate, nper, pmt, pv, PaymentDuePeriod.End)
-    
-    static member PMT(rate: double, nper: double, pv: double, fv : double, paymentDuePeriod : PaymentDuePeriod) =
+    static member FV(rate : double, nper : double, pmt : double, pv : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+
+        if rate = 0.0 then
+            -(pv + pmt * nper) 
+        else 
+            let temp = (1.0 + rate) ** nper
+            (-pv * temp - pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate * (temp - 1.0))
+
+    static member PMT(rate: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+        let fv = defaultArg fv0 0.0
+        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+
         let temp = (1.0 + rate) ** nper
-        let paymentDuePeriodMult = match paymentDuePeriod with | Begin -> 1.0 | End -> 0.0
-        let maskedRate = match rate with | 0.0 -> 1.0 | _ -> rate
-        let fact = match rate with | 0.0 -> (1.0 + maskedRate * paymentDuePeriodMult) * (temp - 1.0) / maskedRate | _ -> nper
+        let maskedRate = if rate = 0.0 then 1.0 else rate
+        let fact = if rate = 0.0 then (1.0 + maskedRate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / maskedRate else nper
         -(fv + pv * temp) / fact
