@@ -18,3 +18,7 @@ type Financial =
         match rate with
         | 0.0 -> whenRateIsZero()
         | _ -> whenRateIsNotZero()
+
+    static member FV(rate : double, nper : double, pmt : double, pv : double) =
+        Financial.FV(rate, nper, pmt, pv, PaymentDuePeriod.End)
+    
