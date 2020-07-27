@@ -1,5 +1,7 @@
 ﻿namespace FinancialSharp
 
+open System
+
 type PaymentDuePeriod =
     | Begin
     | End
@@ -16,7 +18,7 @@ type Financial =
 
         if rate = 0.0 then
             -(pv + pmt * nper) 
-        else 
+        else
             let temp = (1.0 + rate) ** nper
             (-pv * temp - pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate * (temp - 1.0))
 
@@ -28,6 +30,16 @@ type Financial =
         let maskedRate = if rate = 0.0 then 1.0 else rate
         let fact = if rate = 0.0 then (1.0 + maskedRate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / maskedRate else nper
         -(fv + pv * temp) / fact
+
+    static member NPER(rate: double, pmt: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+        let fv = defaultArg fv0 0.0
+        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+
+        if rate = 0.0 then
+            -(fv + pv) / pmt 
+        else
+            let z = pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate
+            Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
     static member PV(rate: double, nper: double, pmt: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
