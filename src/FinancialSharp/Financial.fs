@@ -9,10 +9,9 @@ type PaymentDuePeriod =
 
 type Financial =
 
-    static member private PaymentDuePeriodMult(paymentDuePeriod : PaymentDuePeriod) =
-        match paymentDuePeriod with 
-        | Begin -> 1.0
-        | End -> 0.0
+    static member private PaymentDuePeriodMult =
+        function | Begin -> 1.0
+                 | End -> 0.0
 
     static member FV(rate : double, nper : double, pmt : double, pv : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
