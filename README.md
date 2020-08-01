@@ -1,5 +1,7 @@
 # FinancialSharp
 
+![.NET Core](https://github.com/galassie/financial-sharp/workflows/.NET%20Core/badge.svg)
+
 ## Functions
 
 - fv : compute the future value
