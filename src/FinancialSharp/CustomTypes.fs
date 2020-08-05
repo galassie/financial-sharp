@@ -1,10 +1,10 @@
 namespace FinancialSharp
 
 module CustomTypes =
-    type PositiveDouble = PositiveDouble of double
+    type PaymentPeriod = PaymentPeriod of double
 
-    let createPositiveDouble d =
+    let createPaymentPeriod d =
         if d >= 1.0 then
-            Some (PositiveDouble d)
+            Some (PaymentPeriod d)
         else
             None

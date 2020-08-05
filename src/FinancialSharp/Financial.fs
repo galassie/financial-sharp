@@ -41,13 +41,13 @@ type Financial =
             let z = pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
-    static member IPMT(rate: double, per: PositiveDouble, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member IPMT(rate: double, per: PaymentPeriod, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
 
         match per, paymentDuePeriod with
-        | (PositiveDouble perv), PaymentDuePeriod.Begin when perv = 1.0 -> 0.0
-        | (PositiveDouble perv), pdp ->
+        | (PaymentPeriod perv), PaymentDuePeriod.Begin when perv = 1.0 -> 0.0
+        | (PaymentPeriod perv), pdp ->
             let totalPmt = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
             let ipmt = Financial.FV(rate, (perv - 1.0), totalPmt, pv, pdp) * rate
 
@@ -55,7 +55,7 @@ type Financial =
             | perv, PaymentDuePeriod.Begin when perv > 1.0 -> ipmt / (1.0 + rate)
             | _, _ -> ipmt
 
-    static member PPMT(rate: double, per: PositiveDouble, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member PPMT(rate: double, per: PaymentPeriod, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
 
