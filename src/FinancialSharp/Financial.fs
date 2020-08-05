@@ -69,3 +69,8 @@ type Financial =
         let temp = (1.0 + rate) ** nper
         let fact = if rate = 0.0 then nper else (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
+
+    static member NPV (rate: double, values: double seq) =
+        values
+        |> Seq.indexed
+        |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
