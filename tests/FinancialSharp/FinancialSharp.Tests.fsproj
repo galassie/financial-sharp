@@ -14,8 +14,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="UnitTest1.fs"/>
-    <Compile Include="Program.fs"/>
+    <Compile Include="TestPMT.fs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\FinancialSharp\FinancialSharp.fsproj" />
   </ItemGroup>
 
 </Project>

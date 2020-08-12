@@ -28,7 +28,7 @@ type Financial =
 
         let temp = (1.0 + rate) ** nper
         let maskedRate = if rate = 0.0 then 1.0 else rate
-        let fact = if rate = 0.0 then (1.0 + maskedRate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / maskedRate else nper
+        let fact = if rate = 0.0 then nper else (1.0 + maskedRate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / maskedRate
         -(fv + pv * temp) / fact
 
     static member NPER(rate: double, pmt: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
