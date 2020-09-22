@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Compile Include="TestPMT.fs" />
+    <Compile Include="TestIPMT.fs" />
   </ItemGroup>
 
   <ItemGroup>

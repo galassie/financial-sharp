@@ -1,4 +1,4 @@
-module FinancialSharp.Tests
+namespace FinancialSharp.Tests
 
 open NUnit.Framework
 open FinancialSharp
