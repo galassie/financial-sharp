@@ -70,7 +70,19 @@ type Financial =
         let fact = if rate = 0.0 then nper else (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
-    static member NPV (rate: double, values: double seq) =
+    static member NPV(rate: double, values: double seq) =
         values
         |> Seq.indexed
         |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
+
+    static member MIRR(values : double seq, financeRate : double, reinvestRate : double) =
+        values
+        |> Seq.exists (fun v -> v <> 0.0)
+        |> function
+            | false -> None
+            | true ->
+                let positives = values |> Seq.map (fun x -> if x > 0.0 then x else 0.0)
+                let negatives = values |> Seq.map (fun x -> if x < 0.0 then x else 0.0)
+                let numer = Financial.NPV(reinvestRate, positives) |> Math.Abs
+                let denom = Financial.NPV(financeRate, negatives) |> Math.Abs
+                Some ((numer / denom) ** (double (1 / ((Seq.length values) - 1))) * (1.0 + reinvestRate) - 1.0)

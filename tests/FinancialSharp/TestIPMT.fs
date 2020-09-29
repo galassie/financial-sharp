@@ -32,4 +32,3 @@ type TestIPMT() =
                 Assert.AreEqual(expectedResult, result)
             | None ->
                 Assert.Fail("Payment period should be Some!")
-    
