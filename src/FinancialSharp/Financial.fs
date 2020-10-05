@@ -1,7 +1,6 @@
 ﻿namespace FinancialSharp
 
 open System
-open FinancialSharp.CustomTypes
 
 type PaymentDuePeriod =
     | Begin
@@ -46,23 +45,29 @@ type Financial =
             let z = pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
-    static member IPMT(rate: double, per: PaymentPeriod, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
-        let fv = defaultArg fv0 0.0
-        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
-        match per, paymentDuePeriod with
-        | (PaymentPeriod perv), PaymentDuePeriod.Begin when perv = 1.0 -> 0.0
-        | (PaymentPeriod perv), pdp ->
-            let totalPmt = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
-            let ipmt = Financial.FV(rate, (perv - 1.0), totalPmt, pv, pdp) * rate
-            match perv, pdp with
-            | perv, PaymentDuePeriod.Begin when perv > 1.0 -> ipmt / (1.0 + rate)
-            | _, _ -> ipmt
+    static member IPMT(rate: double, per: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+        if per < 1.0 then
+            None
+        else
+            let fv = defaultArg fv0 0.0
+            let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+            match per, paymentDuePeriod with
+            | 1.0, PaymentDuePeriod.Begin -> Some 0.0
+            | _, pdp ->
+                let totalPmt = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
+                let ipmt = Financial.FV(rate, (per - 1.0), totalPmt, pv, pdp) * rate
+                match per, pdp with
+                | p, PaymentDuePeriod.Begin when p > 1.0 -> Some (ipmt / (1.0 + rate))
+                | _, _ -> Some ipmt
 
-    static member PPMT(rate: double, per: PaymentPeriod, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member PPMT(rate: double, per: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
-        let total = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
-        total - Financial.IPMT(rate, per, nper, pv, fv, paymentDuePeriod)
+        let eval ipmt =
+            let total = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
+            total - ipmt
+        Financial.IPMT(rate, per, nper, pv, fv, paymentDuePeriod)
+        |> Option.map eval
 
     static member PV(rate: double, nper: double, pmt: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
