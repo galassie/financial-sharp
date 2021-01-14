@@ -4,6 +4,8 @@
 
 Simple and zero-dependency library, written entirely in F#, inspired by [numpy-financial](https://github.com/numpy/numpy-financial/) and  [financial](https://github.com/lmammino/financial/).
 
+The library contains a collection of elementary financial functions.
+
 ## Functions
 
 - fv : compute the future value
