@@ -12,7 +12,7 @@ type Financial =
         function | Begin -> 1.0
                  | End -> 0.0
 
-    static member FV(rate : double, nper : double, pmt : double, pv : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member FV(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         if rate = 0.0 then
             -(pv + pmt * nper) 
         else
@@ -20,7 +20,7 @@ type Financial =
             let temp = (1.0 + rate) ** nper
             (-pv * temp - pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate * (temp - 1.0))
 
-    static member PMT(rate: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member PMT(rate:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let temp = (1.0 + rate) ** nper
         let maskedRate = 
@@ -36,7 +36,7 @@ type Financial =
                 (1.0 + maskedRate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / maskedRate
         -(fv + pv * temp) / fact
 
-    static member NPER(rate: double, pmt: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member NPER(rate:double, pmt:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         if rate = 0.0 then
             -(fv + pv) / pmt 
@@ -45,7 +45,7 @@ type Financial =
             let z = pmt * (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
-    static member IPMT(rate: double, per: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member IPMT(rate:double, per:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         if per < 1.0 then
             None
         else
@@ -60,7 +60,7 @@ type Financial =
                 | p, PaymentDuePeriod.Begin when p > 1.0 -> Some (ipmt / (1.0 + rate))
                 | _, _ -> Some ipmt
 
-    static member PPMT(rate: double, per: double, nper: double, pv: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member PPMT(rate:double, per:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
         let eval ipmt =
@@ -69,7 +69,7 @@ type Financial =
         Financial.IPMT(rate, per, nper, pv, fv, paymentDuePeriod)
         |> Option.map eval
 
-    static member PV(rate: double, nper: double, pmt: double, ?fv0 : double, ?paymentDuePeriod0 : PaymentDuePeriod) =
+    static member PV(rate:double, nper:double, pmt:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
         let fv = defaultArg fv0 0.0
         let temp = (1.0 + rate) ** nper
         let fact = 
@@ -80,12 +80,12 @@ type Financial =
                 (1.0 + rate * Financial.PaymentDuePeriodMult(paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
-    static member NPV(rate: double, values: double seq) =
+    static member NPV(rate:double, values:double seq) =
         values
         |> Seq.indexed
         |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
 
-    static member MIRR(values : double seq, financeRate : double, reinvestRate : double) =
+    static member MIRR(values:double seq, financeRate:double, reinvestRate:double) =
         values
         |> Seq.exists (fun v -> v <> 0.0)
         |> function
