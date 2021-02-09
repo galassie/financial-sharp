@@ -19,4 +19,4 @@ type TestFV() =
     [<Test>]
     member _.``fv with rate 0.0``() = 
         let result = Financial.FV(0.0, 5.0, 100.0, 0.0)
-        Assert.AreEqual(-500, result)
+        Assert.AreEqual(-500.0, result)
