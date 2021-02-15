@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -20,6 +20,7 @@
     <Compile Include="TestPPMT.fs" />
     <Compile Include="TestPV.fs" />
     <Compile Include="TestNPV.fs" />
+    <Compile Include="TestMIRR.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
 

@@ -94,13 +94,12 @@ type Financial =
 
     /// Compute the modified internal rate of return
     static member MIRR(values:double seq, financeRate:double, reinvestRate:double) =
-        values
-        |> Seq.exists (fun v -> v <> 0.0)
-        |> function
-            | false -> None
-            | true ->
-                let positives = values |> Seq.map (fun x -> if x > 0.0 then x else 0.0)
-                let negatives = values |> Seq.map (fun x -> if x < 0.0 then x else 0.0)
-                let numer = Financial.NPV(reinvestRate, positives) |> Math.Abs
-                let denom = Financial.NPV(financeRate, negatives) |> Math.Abs
-                Some ((numer / denom) ** (double (1 / ((Seq.length values) - 1))) * (1.0 + reinvestRate) - 1.0)
+        let positives = values |> Seq.map (fun x -> if x > 0.0 then x else 0.0)
+        let negatives = values |> Seq.map (fun x -> if x < 0.0 then x else 0.0)
+        
+        if not (Seq.exists (fun x -> x > 0.0) positives) || not (Seq.exists (fun x -> x < 0.0) negatives) then 
+            None
+        else
+            let numer = Math.Abs(Financial.NPV(reinvestRate, positives))
+            let denom = Math.Abs(Financial.NPV(financeRate, negatives))
+            Some ((numer / denom) ** (1.0 / (double (Seq.length values) - 1.0)) * (1.0 + reinvestRate) - 1.0)
