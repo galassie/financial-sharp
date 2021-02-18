@@ -13,17 +13,17 @@ type Financial =
                  | End -> 0.0
 
     /// Compute the future value
-    static member FV(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod0:PaymentDuePeriod) =
+    static member FV(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if rate = 0.0 then
             -(pv + pmt * nper) 
         else
-            let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             let temp = (1.0 + rate) ** nper
             (-pv * temp - pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate * (temp - 1.0))
 
     /// Compute the payment against loan principal plus interest
-    static member PMT(rate:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
-        let fv = defaultArg fv0 0.0
+    static member PMT(rate:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+        let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
         let maskedRate = 
             if rate = 0.0 then
@@ -34,27 +34,27 @@ type Financial =
             if rate = 0.0 then
                 nper
             else
-                let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+                let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
                 (1.0 + maskedRate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / maskedRate
         -(fv + pv * temp) / fact
 
     /// Compute the number of periodic payments
-    static member NPER(rate:double, pmt:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
-        let fv = defaultArg fv0 0.0
+    static member NPER(rate:double, pmt:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+        let fv = defaultArg fv 0.0
         if rate = 0.0 then
             -(fv + pv) / pmt 
         else
-            let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             let z = pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
     /// Compute the interest portion of a payment
-    static member IPMT(rate:double, per:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
+    static member IPMT(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if per < 1.0 then
             None
         else
-            let fv = defaultArg fv0 0.0
-            let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+            let fv = defaultArg fv 0.0
+            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             match per, paymentDuePeriod with
             | 1.0, PaymentDuePeriod.Begin -> Some 0.0
             | _, pdp ->
@@ -65,9 +65,9 @@ type Financial =
                 | _, _ -> Some ipmt
 
     /// Compute the payment against loan principal
-    static member PPMT(rate:double, per:double, nper:double, pv:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
-        let fv = defaultArg fv0 0.0
-        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+    static member PPMT(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+        let fv = defaultArg fv 0.0
+        let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
         let eval ipmt =
             let total = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
             total - ipmt
@@ -75,22 +75,22 @@ type Financial =
         |> Option.map eval
 
     /// Compute the present value
-    static member PV(rate:double, nper:double, pmt:double, ?fv0:double, ?paymentDuePeriod0:PaymentDuePeriod) =
-        let fv = defaultArg fv0 0.0
+    static member PV(rate:double, nper:double, pmt:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+        let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
         let fact = 
             if rate = 0.0 then
                 nper
             else
-                let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
+                let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
                 (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
-    static member RATE(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod0:PaymentDuePeriod, ?guess0:double, ?tol0:double, ?maxiter0:int) =
-        let paymentDuePeriod = defaultArg paymentDuePeriod0 PaymentDuePeriod.End
-        let guess = defaultArg guess0 0.1
-        let tol = defaultArg tol0 1e-6
-        let maxiter = defaultArg maxiter0 100
+    static member RATE(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
+        let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
+        let guess = defaultArg guess 0.1
+        let tol = defaultArg tol 1e-6
+        let maxiter = defaultArg maxiter 100
 
         let mutable rn = guess
         let mutable iterator = 0
