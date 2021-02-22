@@ -86,6 +86,7 @@ type Financial =
                 (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
+    /// Compute the rate of interest per period
     static member RATE(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
         let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
         let guess = defaultArg guess 0.1
@@ -110,10 +111,10 @@ type Financial =
             iterator <- iterator + 1
             rn <- rnp1
         
-        if close then
-            Some rn
-        else
+        if not close then
             None
+        else
+            Some rn
 
     /// Compute the NPV (Net Present Value) of a cash flow series
     static member NPV(rate:double, values:double seq) =
