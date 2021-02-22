@@ -93,7 +93,7 @@ type Financial =
         let tol = defaultArg tol 1e-6
         let maxiter = defaultArg maxiter 100
 
-        let mutable rn = guess
+        let mutable rate = guess
         let mutable iterator = 0
         let mutable close = false
 
@@ -105,16 +105,48 @@ type Financial =
             g / gp
 
         while (iterator < maxiter) && (not close) do
-            let rnp1 = rn - g_div_gp rn nper pmt pv fv (Financial.PaymentDuePeriodMult paymentDuePeriod)
-            let diff = Math.Abs(rnp1 - rn)
+            let rnp1 = rate - g_div_gp rate nper pmt pv fv (Financial.PaymentDuePeriodMult paymentDuePeriod)
+            let diff = Math.Abs(rnp1 - rate)
             close <- diff < tol
             iterator <- iterator + 1
-            rn <- rnp1
+            rate <- rnp1
         
         if not close then
             None
         else
-            Some rn
+            Some rate
+
+    /// Compute the Internal Rate of Return (IRR)
+    static member IRR(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
+        let guess = defaultArg guess 0.1
+        let tol = defaultArg tol 1e-9
+        let maxiter = defaultArg maxiter 100
+        
+        let mutable irr0 = guess
+        let mutable irr1 = 0.0
+        let mutable iterator = 0
+        let mutable close = false
+
+        while (iterator < maxiter) && (not close) do
+            let npv = 
+                values
+                |> Seq.indexed
+                |> Seq.fold (fun state (index, value) -> state + value / ((irr0 + 1.0) ** (double index))) 0.0
+            let ddx =
+                values
+                |> Seq.indexed
+                |> Seq.fold (fun state (index, value) -> state + (value * double -index) / ((irr0 + 1.0) ** (double index + 1.0))) 0.0
+            
+            irr1 <- irr0 - npv / ddx
+            
+            close <- Math.Abs(irr1 - irr0) <= tol
+            irr0 <- irr1
+            iterator <- iterator + 1
+            
+        if not close then
+            None
+        else
+            Some irr1
 
     /// Compute the NPV (Net Present Value) of a cash flow series
     static member NPV(rate:double, values:double seq) =
