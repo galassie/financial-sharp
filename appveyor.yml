@@ -1,0 +1,15 @@
+image: Visual Studio 2019
+init:
+  - git config --global core.autocrlf input
+
+nuget:
+  disable_publish_on_pr: true
+
+build_script:
+  - dotnet build  -c Release
+  - dotnet test   -c Release --no-build
+  - dotnet pack   -c Release --no-build -o .\deploy
+
+artifacts:
+  - path: 'deploy\*.nupkg'
+    type: NuGetPackage
