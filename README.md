@@ -1,5 +1,6 @@
 # FinancialSharp
 
+[![Build status](https://ci.appveyor.com/api/projects/status/9lyvbtoqjcjg448v?svg=true)](https://ci.appveyor.com/project/galassie/financial-sharp)
 ![.NET Core](https://github.com/galassie/financial-sharp/workflows/.NET%20Core/badge.svg)
 
 Simple and zero-dependency library, written entirely in F#, inspired by [numpy-financial](https://github.com/numpy/numpy-financial/) and  [financial](https://github.com/lmammino/financial/).
