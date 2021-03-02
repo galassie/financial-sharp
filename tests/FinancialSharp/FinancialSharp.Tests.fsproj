@@ -13,16 +13,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="TestFV.fs" />
-    <Compile Include="TestPMT.fs" />
-    <Compile Include="TestNPER.fs" />
-    <Compile Include="TestIPMT.fs" />
-    <Compile Include="TestPPMT.fs" />
-    <Compile Include="TestPV.fs" />
-    <Compile Include="TestRATE.fs" />
-    <Compile Include="TestIRR.fs" />
-    <Compile Include="TestNPV.fs" />
-    <Compile Include="TestMIRR.fs" />
+    <Compile Include="TestFv.fs" />
+    <Compile Include="TestPmt.fs" />
+    <Compile Include="TestNper.fs" />
+    <Compile Include="TestIpmt.fs" />
+    <Compile Include="TestPpmt.fs" />
+    <Compile Include="TestPv.fs" />
+    <Compile Include="TestRate.fs" />
+    <Compile Include="TestIrr.fs" />
+    <Compile Include="TestNpv.fs" />
+    <Compile Include="TestMirr.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
 

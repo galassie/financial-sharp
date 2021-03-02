@@ -4,7 +4,7 @@ open NUnit.Framework
 open FinancialSharp
 
 [<TestFixture>]
-type TestIRR() = 
+type TestIrr() = 
     
     static member data () : obj[][] = 
         [|
@@ -24,13 +24,13 @@ type TestIRR() =
 
     [<TestCaseSource("data")>]
     member _this.``irr``(values:double seq, expectedResult:double) = 
-        match Financial.IRR(values) with
+        match Financial.Irr(values) with
         | Some irr -> Assert.AreEqual(expectedResult, irr)
         | None -> Assert.Fail("irr should be Some!")
     
     
     [<TestCaseSource("invalidData")>]
     member _this.``irr returns None when it cannot be calculated``(values:double seq, guess:double, tol:double, maxiter:int) = 
-        match Financial.IRR(values, guess, tol, maxiter) with
+        match Financial.Irr(values, guess, tol, maxiter) with
         | Some _ -> Assert.Fail("irr should be None!")
         | None -> Assert.Pass()

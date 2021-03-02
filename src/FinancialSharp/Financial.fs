@@ -8,12 +8,19 @@ type PaymentDuePeriod =
 
 type Financial =
 
-    static member private PaymentDuePeriodMult =
-        function | Begin -> 1.0
-                 | End -> 0.0
+    static member private PaymentDuePeriodMult paymentDuePeriod =
+        match paymentDuePeriod with
+        | Begin -> 1.0
+        | End -> 0.0
 
-    /// Compute the future value
-    static member FV(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    /// Get the Begin value of PaymentDuePeriod type
+    static member PaymentDuePeriodBegin = PaymentDuePeriod.Begin
+    
+    /// Get the End value of PaymentDuePeriod type
+    static member PaymentDuePeriodEnd = PaymentDuePeriod.End
+    
+    /// Compute the future value (FV)
+    static member Fv(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if rate = 0.0 then
             -(pv + pmt * nper) 
         else
@@ -22,7 +29,7 @@ type Financial =
             (-pv * temp - pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate * (temp - 1.0))
 
     /// Compute the payment against loan principal plus interest
-    static member PMT(rate:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Pmt(rate:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
         let maskedRate = 
@@ -39,7 +46,7 @@ type Financial =
         -(fv + pv * temp) / fact
 
     /// Compute the number of periodic payments
-    static member NPER(rate:double, pmt:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Nper(rate:double, pmt:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         if rate = 0.0 then
             -(fv + pv) / pmt 
@@ -49,7 +56,7 @@ type Financial =
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
     /// Compute the interest portion of a payment
-    static member IPMT(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Ipmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if per < 1.0 then
             None
         else
@@ -58,24 +65,26 @@ type Financial =
             match per, paymentDuePeriod with
             | 1.0, PaymentDuePeriod.Begin -> Some 0.0
             | _, pdp ->
-                let totalPmt = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
-                let ipmt = Financial.FV(rate, (per - 1.0), totalPmt, pv, pdp) * rate
+                let totalPmt = Financial.Pmt(rate, nper, pv, fv, paymentDuePeriod)
+                let ipmt = Financial.Fv(rate, (per - 1.0), totalPmt, pv, pdp) * rate
                 match per, pdp with
                 | p, PaymentDuePeriod.Begin when p > 1.0 -> Some (ipmt / (1.0 + rate))
                 | _, _ -> Some ipmt
 
     /// Compute the payment against loan principal
-    static member PPMT(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Ppmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
+        
         let eval ipmt =
-            let total = Financial.PMT(rate, nper, pv, fv, paymentDuePeriod)
+            let total = Financial.Pmt(rate, nper, pv, fv, paymentDuePeriod)
             total - ipmt
-        Financial.IPMT(rate, per, nper, pv, fv, paymentDuePeriod)
+        
+        Financial.Ipmt(rate, per, nper, pv, fv, paymentDuePeriod)
         |> Option.map eval
 
-    /// Compute the present value
-    static member PV(rate:double, nper:double, pmt:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    /// Compute the present value (PV)
+    static member Pv(rate:double, nper:double, pmt:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
         let fact = 
@@ -87,7 +96,7 @@ type Financial =
         -(fv + pmt * fact) / temp
 
     /// Compute the rate of interest per period
-    static member RATE(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
+    static member Rate(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
         let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
         let guess = defaultArg guess 0.1
         let tol = defaultArg tol 1e-6
@@ -117,7 +126,7 @@ type Financial =
             Some rate
 
     /// Compute the Internal Rate of Return (IRR)
-    static member IRR(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
+    static member Irr(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
         let guess = defaultArg guess 0.1
         let tol = defaultArg tol 1e-9
         let maxiter = defaultArg maxiter 100
@@ -148,20 +157,20 @@ type Financial =
         else
             Some irr1
 
-    /// Compute the NPV (Net Present Value) of a cash flow series
-    static member NPV(rate:double, values:double seq) =
+    /// Compute the Net Present Value (NPV) of a cash flow series
+    static member Npv(rate:double, values:double seq) =
         values
         |> Seq.indexed
         |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
 
-    /// Compute the modified internal rate of return
-    static member MIRR(values:double seq, financeRate:double, reinvestRate:double) =
+    /// Compute the modified internal rate of return (MIRR)
+    static member Mirr(values:double seq, financeRate:double, reinvestRate:double) =
         let positives = values |> Seq.map (fun x -> if x > 0.0 then x else 0.0)
         let negatives = values |> Seq.map (fun x -> if x < 0.0 then x else 0.0)
         
         if not (Seq.exists (fun x -> x > 0.0) positives) || not (Seq.exists (fun x -> x < 0.0) negatives) then 
             None
         else
-            let numer = Math.Abs(Financial.NPV(reinvestRate, positives))
-            let denom = Math.Abs(Financial.NPV(financeRate, negatives))
+            let numer = Math.Abs(Financial.Npv(reinvestRate, positives))
+            let denom = Math.Abs(Financial.Npv(financeRate, negatives))
             Some ((numer / denom) ** (1.0 / (double (Seq.length values) - 1.0)) * (1.0 + reinvestRate) - 1.0)

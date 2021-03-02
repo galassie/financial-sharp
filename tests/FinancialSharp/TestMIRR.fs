@@ -4,7 +4,7 @@ open NUnit.Framework
 open FinancialSharp
 
 [<TestFixture>]
-type TestMIRR() = 
+type TestMirr() = 
     
     static member data () : obj[][] = 
         [|
@@ -21,12 +21,12 @@ type TestMIRR() =
 
     [<TestCaseSource("data")>]
     member _this.``mirr``(values:double seq, financeRate:double, reinvestRate:double,  expectedResult:double) = 
-        match Financial.MIRR(values, financeRate, reinvestRate) with
+        match Financial.Mirr(values, financeRate, reinvestRate) with
         | Some mirr -> Assert.AreEqual(expectedResult, mirr)
         | None -> Assert.Fail("mirr should be Some!")
     
     [<TestCaseSource("invalidData")>]
     member _this.``mirr returns None when it cannot be calculated``(values:double seq, financeRate:double, reinvestRate:double) = 
-        match Financial.MIRR(values, financeRate, reinvestRate) with
+        match Financial.Mirr(values, financeRate, reinvestRate) with
         | Some _ -> Assert.Fail("mirr should be None!")
         | None -> Assert.Pass()
