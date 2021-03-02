@@ -52,3 +52,16 @@ Use the following to instantiate a Docker container from the `financial-sharp` i
 ```shell
 docker run --rm financial-sharp dotnet test
 ```
+
+## Contributing
+
+Code contributions are more than welcome! 😻
+
+Please commit any pull requests against the `master` branch.  
+If you find any issue, please [report it](https://github.com/galassie/financial-sharp/issues)!
+
+## License
+
+This project is licensed under [The MIT License (MIT)](https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE.md).
+
+Author: [Enrico Galassi](https://twitter.com/enricogalassi88)
