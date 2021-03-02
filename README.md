@@ -19,3 +19,49 @@ The library contains a collection of elementary financial functions.
 - irr : compute the Internal Rate of Return (IRR)
 - npv : compute the NPV (Net Present Value) of a cash flow series
 - mirr : compute the modified internal rate of return
+
+## Build on your machine
+
+If you want to build this library on your machine, execute the following commands:
+
+``` shell
+git clone https://github.com/galassie/financial-sharp.git
+cd financial-sharp
+dotnet build
+```
+
+If you want to run the tests, execute the following command:
+
+``` shell
+dotnet test
+```
+
+## Build in Docker
+
+Required:
+- Install [Docker](https://hub.docker.com/search/?type=edition&offering=community) for your system
+
+Build a Docker image called `financial-sharp`. This will work without any local .NET Core installation.
+
+```shell
+docker build -t financial-sharp .
+```
+
+Use the following to instantiate a Docker container from the `financial-sharp` image and run the tests inside:
+
+```shell
+docker run --rm financial-sharp dotnet test
+```
+
+## Contributing
+
+Code contributions are more than welcome! 😻
+
+Please commit any pull requests against the `master` branch.  
+If you find any issue, please [report it](https://github.com/galassie/financial-sharp/issues)!
+
+## License
+
+This project is licensed under [The MIT License (MIT)](https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE.md).
+
+Author: [Enrico Galassi](https://twitter.com/enricogalassi88)
