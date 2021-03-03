@@ -17,8 +17,8 @@ The library contains a collection of elementary financial functions.
 - ppmt : compute the payment against loan principal
 - pv : compute the present value 
 - rate : compute the rate of interest per period
-- irr : compute the Internal Rate of Return (IRR)
-- npv : compute the NPV (Net Present Value) of a cash flow series
+- irr : compute the internal rate of return
+- npv : compute the net present value of a cash flow series
 - mirr : compute the modified internal rate of return
 
 ## Build on your machine
