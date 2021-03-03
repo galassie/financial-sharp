@@ -13,13 +13,21 @@ type Financial =
         | Begin -> 1.0
         | End -> 0.0
 
-    /// Get the Begin value of PaymentDuePeriod type
+    /// <summary>Get the Begin value of PaymentDuePeriod type</summary>
+    /// <returns>Begin value of PaymentDuePeriod type</returns>
     static member PaymentDuePeriodBegin = PaymentDuePeriod.Begin
     
-    /// Get the End value of PaymentDuePeriod type
+    /// <summary>Get the End value of PaymentDuePeriod type</summary>
+    /// <returns>End value of PaymentDuePeriod type</returns>
     static member PaymentDuePeriodEnd = PaymentDuePeriod.End
     
-    /// Compute the future value (FV)
+    /// <summary>Compute the future value</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pmt">Payment</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>Future value</returns>
     static member Fv(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if rate = 0.0 then
             -(pv + pmt * nper) 
@@ -28,7 +36,13 @@ type Financial =
             let temp = (1.0 + rate) ** nper
             (-pv * temp - pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate * (temp - 1.0))
 
-    /// Compute the payment against loan principal plus interest
+    /// <summary>Compute the payment against loan principal plus interest</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="fv">Future value (default is 0.0)</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>Payment against loan plus interest</returns>
     static member Pmt(rate:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
@@ -45,7 +59,13 @@ type Financial =
                 (1.0 + maskedRate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / maskedRate
         -(fv + pv * temp) / fact
 
-    /// Compute the number of periodic payments
+    /// <summary>Compute the number of periodic payments</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="pmt">Payment</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="fv">Future value (default is 0.0)</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>The number of periodic payments</returns>
     static member Nper(rate:double, pmt:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         if rate = 0.0 then
@@ -55,7 +75,14 @@ type Financial =
             let z = pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
-    /// Compute the interest portion of a payment
+    /// <summary>Compute the interest portion of a payment</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="per">Interest paid against the loan changes during the life or the loan</param>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="fv">Future value (default is 0.0)</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>The interest portion of a payment</returns>
     static member Ipmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         if per < 1.0 then
             None
@@ -71,7 +98,14 @@ type Financial =
                 | p, PaymentDuePeriod.Begin when p > 1.0 -> Some (ipmt / (1.0 + rate))
                 | _, _ -> Some ipmt
 
-    /// Compute the payment against loan principal
+    /// <summary>Compute the payment against loan principal</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="per">Interest paid against the loan changes during the life or the loan</param>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="fv">Future value (default is 0.0)</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>The payment against loan principal</returns>
     static member Ppmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
@@ -83,7 +117,13 @@ type Financial =
         Financial.Ipmt(rate, per, nper, pv, fv, paymentDuePeriod)
         |> Option.map eval
 
-    /// Compute the present value (PV)
+    /// <summary>Compute the present value</summary>
+    /// <param name="rate">Rate of interest</param>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pmt">Payment</param>
+    /// <param name="fv">Future value (default is 0.0)</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <returns>Present value</returns>
     static member Pv(rate:double, nper:double, pmt:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
         let fv = defaultArg fv 0.0
         let temp = (1.0 + rate) ** nper
@@ -95,7 +135,16 @@ type Financial =
                 (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
-    /// Compute the rate of interest per period
+    /// <summary>Compute the rate of interest per period</summary>
+    /// <param name="nper">Number of compounding periods</param>
+    /// <param name="pmt">Payment</param>
+    /// <param name="pv">Present value</param>
+    /// <param name="fv">Future value</param>
+    /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
+    /// <param name="guess">Starting guess for solving the rate of interest (default is 0.1)</param>
+    /// <param name="tol">Required tolerance for the solution (default is 1e-6)</param>
+    /// <param name="maxiter">Maximum iterations in finding the solution (default is 100)</param>
+    /// <returns>The rate of interest per period</returns>
     static member Rate(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
         let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
         let guess = defaultArg guess 0.1
@@ -125,7 +174,12 @@ type Financial =
         else
             Some rate
 
-    /// Compute the Internal Rate of Return (IRR)
+    /// <summary>Compute the internal rate of return</summary>
+    /// <param name="values">Input cash flows per time period</param>
+    /// <param name="guess">Starting guess for solving the rate of interest (default is 0.1)</param>
+    /// <param name="tol">Required tolerance for the solution (default is 1e-6)</param>
+    /// <param name="maxiter">Maximum iterations in finding the solution (default is 100)</param>
+    /// <returns>The internal rate of return</returns>
     static member Irr(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
         let guess = defaultArg guess 0.1
         let tol = defaultArg tol 1e-9
@@ -157,13 +211,20 @@ type Financial =
         else
             Some irr1
 
-    /// Compute the Net Present Value (NPV) of a cash flow series
+    /// <summary>Compute the net present value of a cash flow series</summary>
+    /// <param name="rate">The discount rate</param>
+    /// <param name="values">The values of the time series of cash flows</param>
+    /// <returns>The net present value of a cash flow series</returns>
     static member Npv(rate:double, values:double seq) =
         values
         |> Seq.indexed
         |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
 
-    /// Compute the modified internal rate of return (MIRR)
+    /// <summary>Compute the modified internal rate of return</summary>
+    /// <param name="values">Cash flows (must contain at least one positive and one negative value) </param>
+    /// <param name="financeRate">Interest rate paid on the cash flows</param>
+    /// <param name="reinvestRate">Interest rate received on the cash flows upon reinvestment</param>
+    /// <returns>The modified internal rate of return</returns>
     static member Mirr(values:double seq, financeRate:double, reinvestRate:double) =
         let positives = values |> Seq.map (fun x -> if x > 0.0 then x else 0.0)
         let negatives = values |> Seq.map (fun x -> if x < 0.0 then x else 0.0)
