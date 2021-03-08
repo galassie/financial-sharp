@@ -4,12 +4,12 @@ open type FinancialSharp.PaymentDuePeriod
 [<EntryPoint>]
 let main argv  =
     printfn "This is a series of examples on how to use FinancialSharp with Open Type declarations!\n"
-    printfn "This feature is available from F# 5.0"
-    printfn "https://devblogs.microsoft.com/dotnet/announcing-f-5/#open-type-declarations"
     
+    // PaymentDuePeriodBegin is the static property of Financial
     Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriodBegin)
     |> printfn "Number of periodic payments: %f"
 
+    // It is possible to open also Discriminated Unions like PaymentDuePeriod
     Fv(0.075, 20.0, -2000.0, 0.0, End)
     |> printfn "Future value: %f"
 

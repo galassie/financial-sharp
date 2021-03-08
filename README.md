@@ -54,6 +54,99 @@ Use the following to instantiate a Docker container from the `financial-sharp` i
 docker run --rm financial-sharp dotnet test
 ```
 
+## Usage
+
+You can see the some examples in the folder "samples" (both in F# and C#).
+
+Here how it looks a simple F# program that uses this library:
+
+```fsharp
+open FinancialSharp
+
+[<EntryPoint>]
+let main argv  =
+    printfn "This is a series of examples on how to use FinancialSharp!\n"
+
+    Financial.Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriod.Begin)
+    |> printfn "Number of periodic payments: %f"
+
+    Financial.Fv(0.075, 20.0, -2000.0, 0.0, PaymentDuePeriod.End)
+    |> printfn "Future value: %f"
+
+    Financial.Npv(0.05, [|-15000.0; 1500.0; 2500.0; 3500.0; 4500.0; 6000.0|])
+    |> printfn "Net present value of a cash flow series: %f"
+
+    Financial.Pv(0.0, 20.0, 12000.0, 0.0)
+    |> printfn "Present value: %f"
+    0
+```
+
+This program will output the following text:
+
+```shell
+This is a series of examples on how to use FinancialSharp!
+
+Number of periodic payments: 20.761564
+Future value: 86609.362673
+Net present value of a cash flow series: 122.894855
+Present value: -240000.000000
+```
+
+With F# 5.0, it is possible to use [Open Type Declarations](https://devblogs.microsoft.com/dotnet/announcing-f-5/#open-type-declarations) for a more concise usage.
+For example:
+
+```fsharp
+open type FinancialSharp.Financial
+open type FinancialSharp.PaymentDuePeriod
+
+[<EntryPoint>]
+let main argv  =
+    printfn "This is a series of examples on how to use FinancialSharp with Open Type declarations!\n"
+    
+    // PaymentDuePeriodBegin is the static property of Financial
+    Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriodBegin)
+    |> printfn "Number of periodic payments: %f"
+
+    // It is possible to open also Discriminated Unions like PaymentDuePeriod
+    Fv(0.075, 20.0, -2000.0, 0.0, End)
+    |> printfn "Future value: %f"
+
+    Npv(0.05, [|-15000.0; 1500.0; 2500.0; 3500.0; 4500.0; 6000.0|])
+    |> printfn "Net present value of a cash flow series: %f"
+
+    Pv(0.0, 20.0, 12000.0, 0.0)
+    |> printfn "Present value: %f"
+    0
+```
+
+It is possible to use this library also in a C# project:
+
+```csharp
+using System;
+
+namespace FinancialSharp.CSharp.Sample
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var nper = Financial.Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriod.Begin);
+            Console.WriteLine($"Number of periodic payments: {nper}");
+
+            var fv = Financial.Fv(0.075, 20.0, -2000.0, 0.0, PaymentDuePeriod.End);
+            Console.WriteLine($"Future value: {fv}");
+
+            var npv = Financial.Npv(0.05, new[] { -15000.0, 1500.0, 2500.0, 3500.0, 4500.0, 6000.0 });
+            Console.WriteLine($"Net present value of a cash flow series: {npv}");
+
+            var pv = Financial.Pv(0.0, 20.0, 12000.0, 0.0, paymentDuePeriod: null);
+            Console.WriteLine($"Present value: {pv}");
+        }
+    }
+}
+
+```
+
 ## Contributing
 
 Code contributions are more than welcome! 😻
