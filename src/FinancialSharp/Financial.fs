@@ -181,6 +181,8 @@ type Financial =
     /// <param name="maxiter">Maximum iterations in finding the solution (default is 100)</param>
     /// <returns>The internal rate of return</returns>
     static member Irr(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
+        // Implementation of the Newton-Raphson method, inspired by @martin-haynes
+        // https://gist.github.com/martin-haynes/e036a959a771c75f85c18664d1f0a476
         let guess = defaultArg guess 0.1
         let tol = defaultArg tol 1e-9
         let maxiter = defaultArg maxiter 100
