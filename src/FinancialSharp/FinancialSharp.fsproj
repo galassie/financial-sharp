@@ -6,6 +6,23 @@
     <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <PackageId>FinancialSharp</PackageId>
+		<Title>FinancialSharp: a collection of elementary financial functions</Title>
+    <Version>1.0.0-beta001</Version>
+    <Description>FinancialSharp is a library containing a collection of elementary financial functions, written entirely in F#.</Description>
+		<Authors>Enrico Galassi</Authors>
+		<PackageLicenseUrl>https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE.md</PackageLicenseUrl>
+		<PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+		<NoPackageAnalysis>True</NoPackageAnalysis>
+		<PackageTags>financial;F#;fsharp;</PackageTags>
+    <!-- <PackageIconUrl>https://raw.githubusercontent.com/galassie/financial-sharp/master/assets/financial-sharp-200x200.png</PackageIconUrl> -->
+		<RepositoryUrl>https://github.com/galassie/financial-sharp</RepositoryUrl>
+		<IncludeSymbols>True</IncludeSymbols>
+    <RepositoryType>git</RepositoryType>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="Financial.fs" />
   </ItemGroup>
