@@ -9,16 +9,16 @@ The library contains a collection of elementary financial functions.
 
 ## Functions
 
-- fv : compute the future value
-- pmt : compute the payment against loan principal plus interest
-- nper : compute the number of periodic payments
-- ipmt : compute the interest portion of a payment
-- ppmt : compute the payment against loan principal
-- pv : compute the present value 
-- rate : compute the rate of interest per period
-- irr : compute the internal rate of return
-- npv : compute the net present value of a cash flow series
-- mirr : compute the modified internal rate of return
+- fv(): compute the future value
+- pmt(): compute the payment against loan principal plus interest
+- nper(): compute the number of periodic payments
+- ipmt(): compute the interest portion of a payment
+- ppmt(): compute the payment against loan principal
+- pv(): compute the present value 
+- rate(): compute the rate of interest per period
+- irr(): compute the internal rate of return
+- npv(): compute the net present value of a cash flow series
+- mirr(): compute the modified internal rate of return
 
 ## Build on your machine
 

@@ -223,7 +223,7 @@ type Financial =
         |> Seq.fold (fun acc (i, curr) -> acc + (curr / (1.0 + rate) ** (double i))) 0.0
 
     /// <summary>Compute the modified internal rate of return</summary>
-    /// <param name="values">Cash flows (must contain at least one positive and one negative value) </param>
+    /// <param name="values">Cash flows (must contain at least one positive and one negative value)</param>
     /// <param name="financeRate">Interest rate paid on the cash flows</param>
     /// <param name="reinvestRate">Interest rate received on the cash flows upon reinvestment</param>
     /// <returns>The modified internal rate of return</returns>
