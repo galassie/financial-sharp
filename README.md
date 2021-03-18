@@ -9,16 +9,16 @@ The library contains a collection of elementary financial functions.
 
 ## Functions
 
-- fv(): compute the future value
-- pmt(): compute the payment against loan principal plus interest
-- nper(): compute the number of periodic payments
-- ipmt(): compute the interest portion of a payment
-- ppmt(): compute the payment against loan principal
-- pv(): compute the present value 
-- rate(): compute the rate of interest per period
-- irr(): compute the internal rate of return
-- npv(): compute the net present value of a cash flow series
-- mirr(): compute the modified internal rate of return
+- [fv()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialfvratedouble-nperdouble-pmtdouble-pvdouble-paymentdueperiodpaymentdueperiod): compute the future value
+- [pmt()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialpmtratedouble-nperdouble-pvdouble-fvdouble-paymentdueperiodpaymentdueperiod): compute the payment against loan principal plus interest
+- [nper()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialnperratedouble-pmtdouble-pvdouble-fvdouble-paymentdueperiodpaymentdueperiod): compute the number of periodic payments
+- [ipmt()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialipmtratedouble-perdouble-nperdouble-pvdouble-fvdouble-paymentdueperiodpaymentdueperiod): compute the interest portion of a payment
+- [ppmt()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialppmtratedouble-perdouble-nperdouble-pvdouble-fvdouble-paymentdueperiodpaymentdueperiod): compute the payment against loan principal
+- [pv()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialpvratedouble-nperdouble-pmtdouble-fvdouble-paymentdueperiodpaymentdueperiod): compute the present value 
+- [rate()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialratenperdouble-pmtdouble-pvdouble-fvdouble-paymentdueperiodpaymentdueperiod-guessdouble-toldouble-maxiterint): compute the rate of interest per period
+- [irr()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialirrvaluesdouble-seq-guessdouble-toldouble-maxiterint): compute the internal rate of return
+- [npv()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialnpvratedouble-valuesdouble-seq): compute the net present value of a cash flow series
+- [mirr()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialmirrvaluesdouble-seq-financeratedouble-reinvestratedouble): compute the modified internal rate of return
 
 ## Build on your machine
 
