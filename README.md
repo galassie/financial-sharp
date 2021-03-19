@@ -64,7 +64,7 @@ open FinancialSharp
 
 [<EntryPoint>]
 let main argv  =
-    printfn "This is a series of examples on how to use FinancialSharp!\n"
+    printfn "FinancialSharp!\n"
 
     Financial.Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriod.Begin)
     |> printfn "Number of periodic payments: %f"
@@ -100,7 +100,7 @@ open type FinancialSharp.PaymentDuePeriod
 
 [<EntryPoint>]
 let main argv  =
-    printfn "This is a series of examples on how to use FinancialSharp with Open Type declarations!\n"
+    printfn "FinancialSharp with Open Type declarations!\n"
     
     // PaymentDuePeriodBegin is the static property of Financial
     Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriodBegin)
@@ -138,7 +138,7 @@ namespace FinancialSharp.CSharp.Sample
             var npv = Financial.Npv(0.05, new[] { -15000.0, 1500.0, 2500.0, 3500.0, 4500.0, 6000.0 });
             Console.WriteLine($"Net present value of a cash flow series: {npv}");
 
-            var pv = Financial.Pv(0.0, 20.0, 12000.0, 0.0, paymentDuePeriod: null);
+            var pv = Financial.Pv(0.0, 20.0, 12000.0, 0.0);
             Console.WriteLine($"Present value: {pv}");
         }
     }

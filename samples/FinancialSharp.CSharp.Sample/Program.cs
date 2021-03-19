@@ -15,7 +15,7 @@ namespace FinancialSharp.CSharp.Sample
             var npv = Financial.Npv(0.05, new[] { -15000.0, 1500.0, 2500.0, 3500.0, 4500.0, 6000.0 });
             Console.WriteLine($"Net present value of a cash flow series: {npv}");
 
-            var pv = Financial.Pv(0.0, 20.0, 12000.0, 0.0, paymentDuePeriod: null);
+            var pv = Financial.Pv(0.0, 20.0, 12000.0, 0.0);
             Console.WriteLine($"Present value: {pv}");
         }
     }

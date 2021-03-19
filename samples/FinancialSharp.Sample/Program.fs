@@ -2,7 +2,7 @@ open FinancialSharp
 
 [<EntryPoint>]
 let main argv  =
-    printfn "This is a series of examples on how to use FinancialSharp!\n"
+    printfn "FinancialSharp!\n"
 
     Financial.Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriod.Begin)
     |> printfn "Number of periodic payments: %f"

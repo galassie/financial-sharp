@@ -3,7 +3,7 @@ open type FinancialSharp.PaymentDuePeriod
 
 [<EntryPoint>]
 let main argv  =
-    printfn "This is a series of examples on how to use FinancialSharp with Open Type declarations!\n"
+    printfn "FinancialSharp with Open Type declarations!\n"
     
     // PaymentDuePeriodBegin is the static property of Financial
     Nper(0.075, -2000.0, 0.0, 100000.0, Begin)

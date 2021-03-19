@@ -1,6 +1,7 @@
 ﻿namespace FinancialSharp
 
 open System
+open System.Runtime.InteropServices
 
 type PaymentDuePeriod =
     | End = 0
@@ -21,11 +22,10 @@ type Financial =
     /// <param name="pv">Present value</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>Future value</returns>
-    static member Fv(rate:double, nper:double, pmt:double, pv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Fv(rate:double, nper:double, pmt:double, pv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         if rate = 0.0 then
             -(pv + pmt * nper) 
         else
-            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             let temp = (1.0 + rate) ** nper
             (-pv * temp - pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate * (temp - 1.0))
 
@@ -36,8 +36,7 @@ type Financial =
     /// <param name="fv">Future value (default is 0.0)</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>Payment against loan plus interest</returns>
-    static member Pmt(rate:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
-        let fv = defaultArg fv 0.0
+    static member Pmt(rate:double, nper:double, pv:double, [<Optional; DefaultParameterValue(0.0)>]fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         let temp = (1.0 + rate) ** nper
         let maskedRate = 
             if rate = 0.0 then
@@ -48,7 +47,6 @@ type Financial =
             if rate = 0.0 then
                 nper
             else
-                let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
                 (1.0 + maskedRate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / maskedRate
         -(fv + pv * temp) / fact
 
@@ -59,12 +57,10 @@ type Financial =
     /// <param name="fv">Future value (default is 0.0)</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>The number of periodic payments</returns>
-    static member Nper(rate:double, pmt:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
-        let fv = defaultArg fv 0.0
+    static member Nper(rate:double, pmt:double, pv:double, [<Optional; DefaultParameterValue(0.0)>]fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         if rate = 0.0 then
             -(fv + pv) / pmt 
         else
-            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             let z = pmt * (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) / rate
             Math.Log((-fv + z) / (pv + z)) / Math.Log(1.0 + rate)
 
@@ -76,12 +72,10 @@ type Financial =
     /// <param name="fv">Future value (default is 0.0)</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>The interest portion of a payment</returns>
-    static member Ipmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
+    static member Ipmt(rate:double, per:double, nper:double, pv:double, [<Optional; DefaultParameterValue(0.0)>]fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         if per < 1.0 then
             None
         else
-            let fv = defaultArg fv 0.0
-            let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
             match per, paymentDuePeriod with
             | 1.0, PaymentDuePeriod.Begin -> Some 0.0
             | _, pdp ->
@@ -99,10 +93,7 @@ type Financial =
     /// <param name="fv">Future value (default is 0.0)</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>The payment against loan principal</returns>
-    static member Ppmt(rate:double, per:double, nper:double, pv:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
-        let fv = defaultArg fv 0.0
-        let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
-        
+    static member Ppmt(rate:double, per:double, nper:double, pv:double, [<Optional; DefaultParameterValue(0.0)>]fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         let eval ipmt =
             let total = Financial.Pmt(rate, nper, pv, fv, paymentDuePeriod)
             total - ipmt
@@ -117,14 +108,12 @@ type Financial =
     /// <param name="fv">Future value (default is 0.0)</param>
     /// <param name="paymentDuePeriod">When payment are due (default is End)</param>
     /// <returns>Present value</returns>
-    static member Pv(rate:double, nper:double, pmt:double, ?fv:double, ?paymentDuePeriod:PaymentDuePeriod) =
-        let fv = defaultArg fv 0.0
+    static member Pv(rate:double, nper:double, pmt:double, [<Optional; DefaultParameterValue(0.0)>]fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod) =
         let temp = (1.0 + rate) ** nper
         let fact = 
             if rate = 0.0 then
                 nper
             else
-                let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
                 (1.0 + rate * (Financial.PaymentDuePeriodMult paymentDuePeriod)) * (temp - 1.0) / rate
         -(fv + pmt * fact) / temp
 
@@ -138,12 +127,7 @@ type Financial =
     /// <param name="tol">Required tolerance for the solution (default is 1e-6)</param>
     /// <param name="maxiter">Maximum iterations in finding the solution (default is 100)</param>
     /// <returns>The rate of interest per period</returns>
-    static member Rate(nper:double, pmt:double, pv:double, fv:double, ?paymentDuePeriod:PaymentDuePeriod, ?guess:double, ?tol:double, ?maxiter:int) =
-        let paymentDuePeriod = defaultArg paymentDuePeriod PaymentDuePeriod.End
-        let guess = defaultArg guess 0.1
-        let tol = defaultArg tol 1e-6
-        let maxiter = defaultArg maxiter 100
-
+    static member Rate(nper:double, pmt:double, pv:double, fv:double, [<Optional; DefaultParameterValue(PaymentDuePeriod.End)>]paymentDuePeriod:PaymentDuePeriod, [<Optional; DefaultParameterValue(0.1)>]guess:double, [<Optional; DefaultParameterValue(1e-6)>]tol:double, [<Optional; DefaultParameterValue(100)>]maxiter:int) =
         let mutable rate = guess
         let mutable iterator = 0
         let mutable close = false
@@ -173,13 +157,9 @@ type Financial =
     /// <param name="tol">Required tolerance for the solution (default is 1e-6)</param>
     /// <param name="maxiter">Maximum iterations in finding the solution (default is 100)</param>
     /// <returns>The internal rate of return</returns>
-    static member Irr(values:double seq, ?guess:double, ?tol:double, ?maxiter:int) =
+    static member Irr(values:double seq, [<Optional; DefaultParameterValue(0.1)>]guess:double, [<Optional; DefaultParameterValue(1e-9)>]tol:double, [<Optional; DefaultParameterValue(100)>]maxiter:int) =
         // Implementation of the Newton-Raphson method, inspired by @martin-haynes
         // https://gist.github.com/martin-haynes/e036a959a771c75f85c18664d1f0a476
-        let guess = defaultArg guess 0.1
-        let tol = defaultArg tol 1e-9
-        let maxiter = defaultArg maxiter 100
-        
         let mutable irr0 = guess
         let mutable irr1 = 0.0
         let mutable iterator = 0
