@@ -3,24 +3,17 @@
 open System
 
 type PaymentDuePeriod =
-    | Begin
-    | End
+    | End = 0
+    | Begin = 1
 
 type Financial =
 
     static member private PaymentDuePeriodMult paymentDuePeriod =
         match paymentDuePeriod with
-        | Begin -> 1.0
-        | End -> 0.0
+        | PaymentDuePeriod.End -> 0.0
+        | PaymentDuePeriod.Begin -> 1.0
+        | _ -> 0.0
 
-    /// <summary>Get the Begin value of PaymentDuePeriod type</summary>
-    /// <returns>Begin value of PaymentDuePeriod type</returns>
-    static member PaymentDuePeriodBegin = PaymentDuePeriod.Begin
-    
-    /// <summary>Get the End value of PaymentDuePeriod type</summary>
-    /// <returns>End value of PaymentDuePeriod type</returns>
-    static member PaymentDuePeriodEnd = PaymentDuePeriod.End
-    
     /// <summary>Compute the future value</summary>
     /// <param name="rate">Rate of interest</param>
     /// <param name="nper">Number of compounding periods</param>
