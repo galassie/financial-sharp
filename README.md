@@ -102,11 +102,9 @@ open type FinancialSharp.PaymentDuePeriod
 let main argv  =
     printfn "FinancialSharp with Open Type declarations!\n"
     
-    // PaymentDuePeriodBegin is the static property of Financial
-    Nper(0.075, -2000.0, 0.0, 100000.0, PaymentDuePeriodBegin)
+    Nper(0.075, -2000.0, 0.0, 100000.0, Begin)
     |> printfn "Number of periodic payments: %f"
 
-    // It is possible to open also Discriminated Unions like PaymentDuePeriod
     Fv(0.075, 20.0, -2000.0, 0.0, End)
     |> printfn "Future value: %f"
 
