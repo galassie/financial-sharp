@@ -153,6 +153,6 @@ If you find any issue, please [report it](https://github.com/galassie/financial-
 
 ## License
 
-This project is licensed under [The MIT License (MIT)](https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE.md).
+This project is licensed under [The MIT License (MIT)](https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE).
 
 Author: [Enrico Galassi](https://twitter.com/enricogalassi88)
