@@ -20,6 +20,14 @@ The library contains a collection of elementary financial functions.
 - [npv()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialnpvratedouble-valuesdouble-seq): compute the net present value of a cash flow series
 - [mirr()](https://github.com/galassie/financial-sharp/blob/master/DOC.md#financialmirrvaluesdouble-seq-financeratedouble-reinvestratedouble): compute the modified internal rate of return
 
+## Add package
+
+If you want to add this package to your project, execute the following command:
+
+``` shell
+dotnet add package FinancialSharp --version 1.0.0
+```
+
 ## Build on your machine
 
 If you want to build this library on your machine, execute the following commands:
