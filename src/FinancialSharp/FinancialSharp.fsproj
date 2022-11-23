@@ -13,15 +13,22 @@
     <Description>FinancialSharp is a library containing a collection of elementary financial functions, written entirely in F#.</Description>
     <Authors>Enrico Galassi</Authors>
     <PackageLicenseUrl>https://raw.githubusercontent.com/galassie/financial-sharp/master/LICENSE.md</PackageLicenseUrl>
-    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <NoPackageAnalysis>True</NoPackageAnalysis>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
     <PackageTags>financial;F#;fsharp;</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/galassie/financial-sharp/master/assets/financial-sharp-200x200.png</PackageIconUrl>
+    <PackageIcon>financial-sharp-200x200.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/galassie/financial-sharp</RepositoryUrl>
-    <IncludeSymbols>True</IncludeSymbols>
+    <IncludeSymbols>true</IncludeSymbols>
     <RepositoryType>git</RepositoryType>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../assets/financial-sharp-200x200.png" Pack="true" PackagePath="/"/>
+    <None Include="../../README.md" Pack="true" PackagePath="/"/>
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="Financial.fs" />
