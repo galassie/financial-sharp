@@ -1,8 +1,0 @@
-language: csharp
-solution: financial-sharp.sln
-
-mono: none
-dotnet: 5.0
-script:
- - dotnet build -c Release
- - dotnet test  -c Release --no-build
