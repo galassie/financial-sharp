@@ -25,7 +25,7 @@ The library contains a collection of elementary financial functions.
 If you want to add this package to your project, execute the following command:
 
 ``` shell
-dotnet add package FinancialSharp --version 1.0.0
+dotnet add package FinancialSharp
 ```
 
 ## Build on your machine
